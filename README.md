@@ -166,17 +166,32 @@ Provide a simple but complete collaboration environment for final-year projects 
 
 ## Screenshots
 
-Screenshots for the Front-End are stored in the screenshot folder. Example references (replace with actual files as available):
+Screenshots for the Front-End are stored in the `screenshot` folder. Below are example renderings using centered HTML image tags (this matches the visual layout used in the Kandahar example):
 
-![Screenshot 1](./screenshot/1.PNG)
-![Screenshot 2](./screenshot/2.PNG)
-![Screenshot 3](./screenshot/3.PNG)
-![Screenshot 8](./screenshot/8.PNG)
-![Screenshot 16](./screenshot/16.PNG)
-![Screenshot 18](./screenshot/18.PNG)
-![Screenshot 25](./screenshot/25.PNG)
+<p align="center">
+   <img src="./screenshot/1.PNG" width="75%" alt="Hero / Login" />
+</p>
 
-If your screenshot files have different names, update the image paths above or open the screenshot folder to copy filenames.
+---
+
+<p align="center">
+   <img src="./screenshot/3.PNG" width="48%" alt="Desktop Dashboard 1" />
+   <img src="./screenshot/8.PNG" width="48%" alt="Desktop Dashboard 2" />
+</p>
+
+<p align="center">
+   <img src="./screenshot/16.PNG" width="48%" alt="Desktop View 3" />
+   <img src="./screenshot/18.PNG" width="48%" alt="Desktop View 4" />
+</p>
+
+---
+
+<p align="center">
+   <img src="./screenshot/2.PNG" width="32%" alt="Mobile view" />
+   <img src="./screenshot/25.PNG" width="32%" alt="Additional screenshot" />
+</p>
+
+If any filenames differ, open the `screenshot` folder and update the paths above to match the exact filenames.
 
 ---
 

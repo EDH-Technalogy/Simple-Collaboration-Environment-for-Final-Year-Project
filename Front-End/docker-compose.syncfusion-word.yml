@@ -1,0 +1,9 @@
+services:
+  syncfusion-word-service:
+    image: syncfusion/word-processor-server:latest
+    container_name: syncfusion-word-service
+    ports:
+      - "6002:80"
+    environment:
+      SYNCFUSION_LICENSE_KEY: ${VITE_DOCS_API_KEY}
+    restart: unless-stopped

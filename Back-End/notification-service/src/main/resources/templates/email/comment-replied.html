@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Reply to Your Comment</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.08);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(232, 180, 77, 0.08);
+            border-radius: 50%;
+        }
+
+        .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: rgba(232, 180, 77, 0.06);
+            border-radius: 50%;
+        }
+
+        .header-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #e8b44d;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Content Section */
+        .email-content {
+            padding: 40px 30px;
+        }
+
+        .greeting-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 24px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Post Info Card */
+        .post-info-card {
+            background: linear-gradient(135deg, rgba(26, 95, 122, 0.05) 0%, rgba(232, 180, 77, 0.08) 100%);
+            border: 2px solid #e8b44d;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .post-info-card::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .post-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
+        .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a3d62;
+            line-height: 1.4;
+        }
+
+        /* Comment Thread Section */
+        .comment-thread {
+            margin: 32px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8b44d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Comment Items */
+        .comment-item {
+            margin-bottom: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .your-comment {
+            background: #f5f7fa;
+            border-left: 4px solid #0a3d62;
+        }
+
+        .reply-comment {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.08) 0%, rgba(26, 95, 122, 0.05) 100%);
+            border-left: 4px solid #e8b44d;
+            margin-left: 24px;
+        }
+
+        .comment-header {
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-meta {
+            font-size: 13px;
+            color: #666666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        .comment-badge {
+            display: inline-block;
+            background: #0a3d62;
+            color: #e8b44d;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reply-badge {
+            background: #e8b44d;
+            color: #0a3d62;
+        }
+
+        .comment-time {
+            font-size: 11px;
+            color: #999999;
+        }
+
+        .comment-body {
+            padding: 20px;
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .comment-highlight {
+            background: rgba(232, 180, 77, 0.2);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 12px 0;
+            border-left: 3px solid #e8b44d;
+            font-style: italic;
+            color: #0a3d62;
+        }
+
+        /* Reply Indicator */
+        .reply-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px 8px 20px;
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .reply-indicator svg {
+            width: 16px;
+            height: 16px;
+            color: #e8b44d;
+        }
+
+        /* Engagement Info */
+        .engagement-section {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .engagement-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .engagement-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            color: #ffffff;
+            padding: 16px 48px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 61, 98, 0.3);
+        }
+
+        .cta-text {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 16px;
+        }
+
+        /* Notification Preferences */
+        .notification-prefs {
+            background: #f5f7fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .notification-prefs-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .notification-prefs-text {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .notification-prefs-link {
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .notification-prefs-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 32px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-message {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .footer-contact strong {
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #0a3d62;
+            color: #ffffff;
+            border-color: #0a3d62;
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .copyright {
+            font-size: 11px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-content {
+                padding: 24px 20px;
+            }
+
+            .email-footer {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
+
+            .reply-comment {
+                margin-left: 0;
+                border-left-width: 3px;
+            }
+
+            .engagement-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 14px;
+            }
+
+            .post-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <div class="header-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20.8457C16.8325 20.8457 20.75 16.9282 20.75 12.0957C20.75 7.26321 16.8325 3.3457 12 3.3457C7.16751 3.3457 3.25 7.26321 3.25 12.0957C3.25 14.5119 4.22938 16.6994 5.81282 18.2829L3.25 20.8457H12Z" stroke="#323544" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="header-title">New Reply</div>
+        <div class="header-subtitle"> <span class="user-name" th:text="${replierName}"></span> Responded to Your Comment</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <p class="greeting-text">
+            Hello <span class="user-name" th:text="${commenterName}">there</span>,
+        </p>
+
+        <p style="font-size: 15px; color: #666666; margin-bottom: 16px;">
+            <span class="user-name" th:text="${replierName}"></span> replied to your comment on:
+        </p>
+
+        <!-- Post Info Card -->
+        <div class="post-info-card">
+            <div class="post-label">📝 Article</div>
+            <div class="post-title" th:text="${postTitle}">Economic Policies and Their Impact on Development</div>
+        </div>
+
+        <!-- Comment Thread -->
+        <div class="comment-thread">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Comment Thread
+            </div>
+
+            <!-- Your Original Comment -->
+            <div class="comment-item your-comment">
+                <div class="comment-header">
+                    <div class="comment-meta">
+                        <span class="comment-author" th:text="${commenterName}">You</span>
+                        <span class="comment-badge">Original Comment</span>
+                    </div>
+                    <div class="comment-time" th:text="${#dates.format(commentDate, 'MMM dd, yyyy HH:mm')}">Jan 15, 2024 14:30</div>
+                </div>
+                <div class="comment-body" th:text="${originalComment}">
+                    This is a really insightful analysis of modern economic trends and policy implementation...
+                </div>
+            </div>
+
+            <!-- Reply Indicator -->
+            <div class="reply-indicator">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 10 4 15 9 20"></polyline>
+                    <path d="M20 4v7a7 7 0 0 1-7 7H4"></path>
+                </svg>
+                Reply from <span class="comment-author" th:text="${replierName}">Jane Smith</span>
+            </div>
+
+            <!-- Reply Comment -->
+            <div class="comment-item reply-comment">
+                <div class="comment-header">
+                    <div class="comment-meta">
+                        <span class="comment-author" th:text="${replierName}">Jane Smith</span>
+                        <span class="comment-badge reply-badge">Reply</span>
+                    </div>
+                    <div class="comment-time" th:text="${#dates.format(replyDate, 'MMM dd, yyyy HH:mm')}">Jan 15, 2024 16:45</div>
+                </div>
+                <div class="comment-body">
+                    <p style="margin-bottom: 12px;">
+                        Great point! I completely agree with your analysis. Your observation about market dynamics is particularly insightful.
+                    </p>
+                    <div class="comment-highlight" th:text="${replySnippet}">
+                        I would like to add that the empirical evidence from recent studies supports your hypothesis...
+                    </div>
+                    <p style="margin-top: 12px;">
+                        Let's continue this discussion in more detail!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Engagement Stats -->
+        <div class="engagement-section">
+            <div class="engagement-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 17"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                Discussion Engagement
+            </div>
+            <div class="engagement-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Comments</div>
+                    <div class="stat-value" th:text="${totalComments}">12</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Likes</div>
+                    <div class="stat-value" th:text="${totalLikes}">34</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a th:href="${postUrl}" class="cta-button">
+                <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                View Full Discussion
+            </a>
+            <p class="cta-text">Read the reply and continue the conversation</p>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div class="notification-prefs">
+            <div class="notification-prefs-title">📧 Notification Preferences</div>
+            <p class="notification-prefs-text">
+                You're receiving this because someone replied to your comment.
+                <a th:href="${notificationPreferencesUrl}" class="notification-prefs-link">Manage your notification settings</a>
+                to control which discussions you follow.
+            </p>
+        </div>
+
+        <!-- Additional Context -->
+        <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 24px 0; border: 1px solid #e0e0e0;">
+            <div style="font-weight: 700; color: #0a3d62; font-size: 14px; margin-bottom: 12px;">
+                💡 Why You Received This Email
+            </div>
+            <p style="font-size: 13px; color: #666666; line-height: 1.6; margin: 0;">
+                We send notifications when someone replies to your comments, so you can stay updated on discussions you've participated in. This helps foster active engagement in our academic community.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <div class="footer-message">
+            <strong>Keep the conversation going!</strong><br>
+            Your participation helps enrich our academic community with diverse perspectives.
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-contact">
+            <strong>Kandahar University<br>Faculty of Economics</strong>
+            Email: <strong>blog@kandahar-university.edu</strong><br>
+            Phone: <strong>+93 (0) XXX-XXX-XXXX</strong><br>
+            Website: <strong>www.kandahar-university.edu</strong>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="Facebook">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Twitter">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </a>
+        </div>
+
+        <div class="copyright">
+            © 2024 Kandahar University - Faculty of Economics. All rights reserved.
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Collaboration Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.08);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(232, 180, 77, 0.08);
+            border-radius: 50%;
+        }
+
+        .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: rgba(232, 180, 77, 0.06);
+            border-radius: 50%;
+        }
+
+        .header-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #e8b44d;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Content Section */
+        .email-content {
+            padding: 40px 30px;
+        }
+
+        .greeting-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 24px;
+        }
+
+        .invitee-name {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Repository Card */
+        .repo-card {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.08) 0%, rgba(26, 95, 122, 0.05) 100%);
+            border: 2px solid #e8b44d;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 28px 0;
+            position: relative;
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 30px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .repo-info {
+            margin-top: 12px;
+        }
+
+        .repo-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .repo-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: #666666;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border-left: 2px solid #e8b44d;
+        }
+
+        .repo-description {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #666666;
+        }
+
+        /* Inviter Info */
+        .inviter-section {
+            background: #f5f7fa;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .inviter-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #e8b44d;
+        }
+
+        .inviter-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 4px;
+        }
+
+        .inviter-info p {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 4px;
+        }
+
+        .inviter-role {
+            font-size: 12px;
+            color: #999999;
+            font-weight: 600;
+        }
+
+        /* Repository Details */
+        .repo-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .detail-card {
+            background: #f5f7fa;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            color: #0a3d62;
+            font-weight: 700;
+        }
+
+        /* Permissions Section */
+        .permissions-section {
+            margin: 28px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8b44d;
+        }
+
+        .permissions-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .permission-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            align-items: flex-start;
+        }
+
+        .permission-check {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e8b44d;
+            font-weight: 700;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .permission-text {
+            flex: 1;
+        }
+
+        .permission-name {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .permission-description {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.4;
+        }
+
+        /* What You Can Do */
+        .features-section {
+            margin: 28px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 10px;
+            padding: 14px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feature-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #e8b44d 0%, #d4992f 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .feature-description {
+            font-size: 11px;
+            color: #666666;
+            line-height: 1.4;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            color: #ffffff;
+            padding: 16px 48px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 61, 98, 0.3);
+        }
+
+        .cta-text {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 16px;
+        }
+
+        /* Invitation Link */
+        .invitation-link {
+            background: #f9f9f9;
+            padding: 14px;
+            border-left: 4px solid #0a3d62;
+            margin: 16px 0;
+            font-family: 'Fira Code', monospace;
+            color: #0a3d62;
+            font-size: 11px;
+            word-break: break-all;
+            border-radius: 4px;
+            font-weight: 600;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        /* Expires Note */
+        .expires-note {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.1) 0%, rgba(232, 180, 77, 0.05) 100%);
+            border-left: 4px solid #e8b44d;
+            padding: 14px;
+            margin: 16px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0a3d62;
+        }
+
+        .expires-note strong {
+            color: #0a3d62;
+        }
+
+        .expires-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* Quick Start Guide */
+        .quick-start {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .quick-start-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-start-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .quick-start ol {
+            margin-left: 20px;
+            color: #666666;
+        }
+
+        .quick-start ol li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .quick-start code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: #0a3d62;
+        }
+
+        /* Footer Section */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 32px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-message {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .footer-contact strong {
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #0a3d62;
+            color: #ffffff;
+            border-color: #0a3d62;
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .copyright {
+            font-size: 11px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-content {
+                padding: 24px 20px;
+            }
+
+            .email-footer {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
+
+            .repo-card {
+                padding: 20px;
+            }
+
+            .repo-name {
+                font-size: 14px;
+            }
+
+            .repo-details {
+                grid-template-columns: 1fr;
+            }
+
+            .permissions-list {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .inviter-section {
+                grid-template-columns: 50px 1fr;
+                gap: 12px;
+            }
+
+            .inviter-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <div class="header-icon">🚀</div>
+        <div class="header-title">Repository Collaboration</div>
+        <div class="header-subtitle">You've Been Invited</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <p class="greeting-text">
+            Hello <span class="invitee-name" th:text="${inviteeName != null ? inviteeName : 'Developer'}">Developer</span>,
+        </p>
+
+        <!-- Repository Card -->
+        <div class="repo-card">
+            <div class="repo-info">
+                <div class="repo-name" th:text="${repositoryName}">awesome-economics-project</div>
+                <div class="repo-path" th:text="${repositoryPath}">kandahar-university/faculty-economics</div>
+                <p class="repo-description" th:text="${repositoryDescription}">
+                    A collaborative project for advanced economic analysis and research
+                </p>
+            </div>
+        </div>
+
+        <!-- Inviter Section -->
+        <div class="inviter-section">
+            <div class="inviter-avatar" th:text="${inviterName.charAt(0)}">A</div>
+            <div class="inviter-info">
+                <h3 th:text="${inviterName}">Dr. Ahmad Hassan</h3>
+                <p th:text="${inviterEmail}">ahmad.hassan@kandahar-university.edu</p>
+                <p class="inviter-role" th:text="${inviterRole}">Project Lead</p>
+            </div>
+        </div>
+
+        <!-- Repository Details -->
+        <div class="repo-details">
+            <div class="detail-card">
+                <div class="detail-label">Visibility</div>
+                <div class="detail-value" th:text="${repositoryVisibility}">Private</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Type</div>
+                <div class="detail-value">Repository</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Your Role</div>
+                <div class="detail-value" th:text="${inviteRole}">Collaborator</div>
+            </div>
+        </div>
+
+        <!-- Permissions Section -->
+        <div class="permissions-section">
+            <div class="section-title">
+                <svg style="display: inline-block; margin-right: 8px; width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Your Permissions
+            </div>
+            <div class="permissions-list">
+                <div class="permission-item">
+                    <div class="permission-check">✓</div>
+                    <div class="permission-text">
+                        <div class="permission-name">Read Code</div>
+                        <div class="permission-description">Access and view all repository files</div>
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-check">✓</div>
+                    <div class="permission-text">
+                        <div class="permission-name">Create Branches</div>
+                        <div class="permission-description">Push code and create pull requests</div>
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-check">✓</div>
+                    <div class="permission-text">
+                        <div class="permission-name">View Issues</div>
+                        <div class="permission-description">See project tasks and discussions</div>
+                    </div>
+                </div>
+
+                <div class="permission-item">
+                    <div class="permission-check">✓</div>
+                    <div class="permission-text">
+                        <div class="permission-name">Participate</div>
+                        <div class="permission-description">Comment and collaborate on tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What You Can Do -->
+        <div class="features-section">
+            <div class="section-title">What's Next?</div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                            <path d="M4.22 19.78l4.24-4.24m6.08 0l4.24 4.24"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Clone Repo</div>
+                        <div class="feature-description">Set up the code locally</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Create Branches</div>
+                        <div class="feature-description">Start working on features</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Submit PRs</div>
+                        <div class="feature-description">Share your contributions</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Collaborate</div>
+                        <div class="feature-description">Discuss with the team</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start Guide -->
+        <div class="quick-start">
+            <div class="quick-start-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26H22L17.55 12.5L19.64 18.74L12 14.49L4.36 18.74L6.45 12.5L2 8.26H8.91L12 2Z"></path>
+                </svg>
+                Quick Start Guide
+            </div>
+            <ol>
+                <li><strong>Clone the repository:</strong> <code>git clone [repository-url]</code></li>
+                <li><strong>Install dependencies:</strong> Check the README for setup instructions</li>
+                <li><strong>Create a branch:</strong> <code>git checkout -b feature/your-feature</code></li>
+                <li><strong>Make changes</strong> and commit your work</li>
+                <li><strong>Push & create a pull request</strong> for review</li>
+            </ol>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a th:href="${acceptUrl}" class="cta-button">
+                <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Accept Invitation
+            </a>
+            <p class="cta-text">Click the button above or copy the link below to accept this invitation</p>
+        </div>
+
+        <!-- Invitation Link -->
+        <p style="font-size: 13px; color: #666; margin-bottom: 8px;">
+            <strong>Invitation Link:</strong>
+        </p>
+        <div class="invitation-link" th:text="${acceptUrl}">[Invitation URL]</div>
+
+        <!-- Expires Note -->
+        <div class="expires-note">
+            <span class="expires-icon">⏰</span>
+            <strong>This invitation expires on <span th:text="${#dates.format(expiresAt, 'MMM dd, yyyy')}">February 15, 2024</span></strong>
+            <br>
+            Accept before it expires to maintain access!
+        </div>
+
+        <!-- Additional Info -->
+        <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 24px 0; border: 1px solid #e0e0e0;">
+            <div style="font-weight: 700; color: #0a3d62; font-size: 14px; margin-bottom: 12px;">
+                📚 Need Help?
+            </div>
+            <p style="font-size: 13px; color: #666666; line-height: 1.6; margin: 0;">
+                Refer to the project documentation in the README file, or contact <span th:text="${inviterName}">the project lead</span> if you have any questions about the setup or contribution guidelines.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <div class="footer-message">
+            <strong>Welcome to the team! 🎉</strong><br>
+            We're excited to collaborate with you on this project.
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-contact">
+            <strong>Kandahar University<br>Faculty of Economics</strong>
+            Email: <strong>dev@kandahar-university.edu</strong><br>
+            Phone: <strong>+93 (0) XXX-XXX-XXXX</strong><br>
+            Website: <strong>www.kandahar-university.edu</strong>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="GitHub">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Email">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Slack">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 7c0 1.1-.9 2-2 2S1 8.1 1 7s.9-2 2-2 2 .9 2 2zm14-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5 1C3.9 1 3 1.9 3 3v8c0 1.1.9 2 2 2s2-.9 2-2V3c0-1.1-.9-2-2-2zm6 2c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+                </svg>
+            </a>
+        </div>
+
+        <div class="copyright">
+            © 2024 Kandahar University - Faculty of Economics. All rights reserved.
+        </div>
+    </div>
+</div>
+</body>
+</html>

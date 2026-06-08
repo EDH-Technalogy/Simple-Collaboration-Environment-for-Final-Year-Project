@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Invited to Kandahar University</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.08);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(232, 180, 77, 0.08);
+            border-radius: 50%;
+        }
+
+        .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: rgba(232, 180, 77, 0.06);
+            border-radius: 50%;
+        }
+
+        .header-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #e8b44d;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Content Section */
+        .email-content {
+            padding: 40px 30px;
+        }
+
+        .greeting-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 24px;
+        }
+
+        .invitee-name {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Invitation Card */
+        .invitation-card {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.08) 0%, rgba(26, 95, 122, 0.05) 100%);
+            border: 2px solid #e8b44d;
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .invitation-card::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .invitation-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 12px;
+            margin-top: 12px;
+        }
+
+        .invitation-card-role {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .invitation-message {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+        }
+
+        .invitation-message strong {
+            color: #0a3d62;
+        }
+
+        /* Inviter Info */
+        .inviter-section {
+            background: #f5f7fa;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .inviter-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #e8b44d;
+        }
+
+        .inviter-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 4px;
+        }
+
+        .inviter-info p {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 4px;
+        }
+
+        .inviter-role {
+            font-size: 12px;
+            color: #999999;
+            font-weight: 600;
+        }
+
+        /* Features of Joining */
+        .features-section {
+            margin: 32px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8b44d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .benefit-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #e8b44d 0%, #d4992f 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-icon svg {
+            width: 22px;
+            height: 22px;
+            color: #ffffff;
+            stroke: #ffffff;
+        }
+
+        .benefit-text {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .benefit-description {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            color: #ffffff;
+            padding: 16px 48px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 61, 98, 0.3);
+        }
+
+        .cta-text {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 16px;
+        }
+
+        /* Invitation Link */
+        .invitation-link {
+            background: #f9f9f9;
+            padding: 16px;
+            border-left: 4px solid #0a3d62;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #0a3d62;
+            font-size: 12px;
+            word-break: break-all;
+            border-radius: 4px;
+            font-weight: 600;
+            overflow-wrap: break-word;
+        }
+
+        /* Expires Note */
+        .expires-note {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.1) 0%, rgba(232, 180, 77, 0.05) 100%);
+            border-left: 4px solid #e8b44d;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0a3d62;
+        }
+
+        .expires-note strong {
+            color: #0a3d62;
+        }
+
+        .expires-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* Additional Info */
+        .info-box {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Footer Section */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 32px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-message {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .footer-contact strong {
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #0a3d62;
+            color: #ffffff;
+            border-color: #0a3d62;
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .copyright {
+            font-size: 11px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-content {
+                padding: 24px 20px;
+            }
+
+            .email-footer {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
+
+            .invitation-card {
+                padding: 24px;
+            }
+
+            .invitation-card-title {
+                font-size: 20px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .inviter-section {
+                grid-template-columns: 50px 1fr;
+                gap: 12px;
+            }
+
+            .inviter-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <div class="header-icon">✨</div>
+        <div class="header-title">You're Invited!</div>
+        <div class="header-subtitle">Join Kandahar University</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <p class="greeting-text">
+            Hello <span class="invitee-name" th:text="${inviteeName != null ? inviteeName : 'there'}">there</span>,
+        </p>
+
+        <!-- Invitation Card -->
+        <div class="invitation-card">
+            <div class="invitation-card-title" th:text="${inviterName}">Dr. Ahmad Hassan</div>
+            <div class="invitation-card-role" th:text="${inviterRole}">Faculty Dean</div>
+            <p class="invitation-message">
+                has invited you to join<br>
+                <strong th:text="${targetName}">Kandahar University - Faculty of Economics</strong>
+            </p>
+        </div>
+
+        <!-- Inviter Section -->
+        <div class="inviter-section">
+            <div class="inviter-avatar" th:text="${inviterName.charAt(0)}">A</div>
+            <div class="inviter-info">
+                <h3 th:text="${inviterName}">Dr. Ahmad Hassan</h3>
+                <p th:text="${inviterEmail}">ahmad.hassan@kandahar-university.edu</p>
+                <p class="inviter-role" th:text="${inviterRole}">Faculty Dean</p>
+            </div>
+        </div>
+
+        <!-- What You Get -->
+        <div class="features-section">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+                What You'll Get Access To
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Course Materials</div>
+                        <div class="benefit-description">Access all lecture notes and learning resources</div>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Collaborate</div>
+                        <div class="benefit-description">Connect with peers and faculty members</div>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                            <path d="M4.22 19.78l4.24-4.24m6.08 0l4.24 4.24"></path>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Class Schedule</div>
+                        <div class="benefit-description">View timetables and academic calendar</div>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Support 24/7</div>
+                        <div class="benefit-description">Get help from advisors anytime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Join -->
+        <div class="info-box">
+            <div class="info-box-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                    <path d="M12 6v6l4 2"></path>
+                </svg>
+                Why Join Now?
+            </div>
+            <p>
+                Be part of a prestigious academic community at Kandahar University's Faculty of Economics. Gain access to world-class education, network with industry professionals, and advance your career in economics.
+            </p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a th:href="${acceptUrl}" class="cta-button">
+                <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Accept Invitation
+            </a>
+            <p class="cta-text">Click the button above or copy the link below to accept this invitation</p>
+        </div>
+
+        <!-- Invitation Link -->
+        <p style="font-size: 13px; color: #666; margin-bottom: 8px;">
+            <strong>Invitation Link:</strong>
+        </p>
+        <div class="invitation-link" th:text="${acceptUrl}">[Invitation URL]</div>
+
+        <!-- Expires Note -->
+        <div class="expires-note">
+            <span class="expires-icon">⏰</span>
+            <strong>This invitation expires on <span th:text="${#dates.format(expiresAt, 'MMM dd, yyyy')}">January 30, 2024</span></strong>
+            <br>
+            Don't miss out — accept it before it expires!
+        </div>
+
+        <!-- Additional Information -->
+        <div class="info-box" style="background: linear-gradient(135deg, rgba(26, 95, 122, 0.05) 0%, rgba(232, 180, 77, 0.08) 100%); border: 1px solid #e8b44d;">
+            <div class="info-box-title" style="color: #0a3d62;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Questions?
+            </div>
+            <p>
+                If you have any questions about this invitation or need assistance with the enrollment process, please don't hesitate to reach out to us. Our support team is here to help!
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <div class="footer-message">
+            <strong>We're excited to welcome you to our community!</strong><br>
+            Accept this invitation and start your journey with us today.
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-contact">
+            <strong>Kandahar University<br>Faculty of Economics</strong>
+            Email: <strong>admissions@kandahar-university.edu</strong><br>
+            Phone: <strong>+93 (0) XXX-XXX-XXXX</strong><br>
+            Website: <strong>www.kandahar-university.edu</strong>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="Facebook">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Twitter">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </a>
+        </div>
+
+        <div class="copyright">
+            © 2024 Kandahar University - Faculty of Economics. All rights reserved.
+        </div>
+    </div>
+</div>
+</body>
+</html>

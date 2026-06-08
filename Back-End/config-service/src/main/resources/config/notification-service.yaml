@@ -1,0 +1,170 @@
+spring:
+  application:
+    name: notification-service
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_SERVER_URL}/realms/${KEYCLOAK_REALM}
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+  rabbitmq:
+    password: ${RABBIT_PASSWORD}
+    username: ${RABBIT_USERNAME}
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+  datasource:
+    url: jdbc:postgresql://localhost:5432/notification_db
+    username: admin
+    password: admin
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.app.notification.event"
+        spring.json.use.type.headers: false
+      max-poll-records: 10
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+      concurrency: 3
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  thymeleaf:
+    prefix: classpath:/templates/email/
+    suffix: .html
+    cache: true
+server:
+  port: 8086
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html
+  error:
+    include-message: always
+    include-binding-errors: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,kafka
+  endpoint:
+    health:
+      show-details: when_authorized
+  health:
+    kafka:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+app:
+  notification:
+    from-email: ${FROM_EMAIL}
+    from-name: ${FROM_NAME}
+    base-url: ${BASE_URL}
+    idempotency-ttl-hours: 24
+    max-retry-attempts: 3
+    retry-delay-ms: 1000
+    rate-limit:
+      max-per-user-per-hour: 20
+  kafka:
+    topics:
+      user-registered: user.registered
+      password-changed: password.changed
+      invitation-sent: invitation.sent
+      blog-commented: blog.commented
+      comment-replied: comment.replied
+      notification-dlq: notification.dlq
+      article-operation: article.operations
+      repository.operation: repository.operations
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      emailService:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 50
+  retry:
+    instances:
+      emailService:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

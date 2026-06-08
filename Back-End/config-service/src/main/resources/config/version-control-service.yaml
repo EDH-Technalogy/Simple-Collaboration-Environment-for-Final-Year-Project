@@ -1,0 +1,38 @@
+spring:
+  mongodb:
+    uri: mongodb://localhost:27017/vic_application
+  rabbitmq:
+    password: ${RABBIT_PASSWORD}
+    username: ${RABBIT_USERNAME}
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_SERVER_URL}/realms/${KEYCLOAK_REALM}
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+server:
+  port: 8000
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+storage:
+  minio:
+    bucket-objects: buket-object
+    bucket-layout: buket-layout
+    endpoint: http://localhost:9000
+    access-key: admin
+    secret-key: password123

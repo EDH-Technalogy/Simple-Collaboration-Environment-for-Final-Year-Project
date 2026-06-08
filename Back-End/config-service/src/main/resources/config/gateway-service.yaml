@@ -1,0 +1,87 @@
+# Loaded by Spring Cloud Config when gateway-service resolves `gateway-service` from the server.
+spring:
+  application:
+    name: gateway-service
+#  main:
+#    web-application-type: reactive
+#  cloud:
+#    gateway:
+#      httpclient:
+#        connect-timeout: 10000
+#        response-timeout: 120s
+#      globalcors:
+#        add-to-simple-url-handler-mapping: true
+#        corsConfigurations:
+#          "[/**]":
+#            allowed-origin-patterns:
+#              - "${CORS_ALLOWED_ORIGIN_PATTERN:http://localhost:*}"
+#              - "http://127.0.0.1:*"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - DELETE
+#              - PATCH
+#              - OPTIONS
+#            allowed-headers: "*"
+#            allowCredentials: true
+#            maxAge: 3600
+#      routes:
+#        - id: auth-service
+#          uri: lb://auth-service
+#          predicates:
+#            - Path=/api/v1/auth/**,/api/v1/users/**,/api/v1/roles/**,/api/v1/permissions/**
+#
+#        - id: blog-service
+#          uri: lb://blog-service
+#          predicates:
+#            - Path=/api/v1/articles/**,/api/v1/files/**
+#
+#        - id: notification-service
+#          uri: lb://notification-service
+#          predicates:
+#            - Path=/api/v1/notifications/**
+#
+#        - id: file-service
+#          uri: lb://file-service
+#          predicates:
+#            - Path=/file/**
+#
+#        - id: version-control-service
+#          uri: lb://version-control-service
+#          predicates:
+#            - Path=/auth/**,/repos/**,/api/v1/repos/**,/api/v1/milestone/**,/api/v1/task/**
+#
+#        - id: version-control-websocket
+#          uri: lb://version-control-service
+#          predicates:
+#            - Path=/ws/**
+#
+#        - id: faculty-service
+#          uri: lb://faculty-service
+#          predicates:
+#            - Path=/api/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: INFO

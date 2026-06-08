@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Comment on Your Blog Post</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.08);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(232, 180, 77, 0.08);
+            border-radius: 50%;
+        }
+
+        .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: rgba(232, 180, 77, 0.06);
+            border-radius: 50%;
+        }
+
+        .header-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #e8b44d;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Content Section */
+        .email-content {
+            padding: 40px 30px;
+        }
+
+        .greeting-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 24px;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Post Info Card */
+        .post-info-card {
+            background: linear-gradient(135deg, rgba(26, 95, 122, 0.05) 0%, rgba(232, 180, 77, 0.08) 100%);
+            border: 2px solid #e8b44d;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .post-info-card::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 50%;
+        }
+
+        .post-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
+        .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a3d62;
+            line-height: 1.4;
+        }
+
+        /* Commenter Info */
+        .commenter-section {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .commenter-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #e8b44d;
+        }
+
+        .commenter-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 4px;
+        }
+
+        .commenter-info p {
+            font-size: 13px;
+            color: #666666;
+            margin: 0;
+        }
+
+        /* Comment Box */
+        .comment-box {
+            background: #f5f7fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            border-left: 4px solid #e8b44d;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comment-author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-author-name {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+        }
+
+        .comment-badge {
+            display: inline-block;
+            background: #e8b44d;
+            color: #0a3d62;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #999999;
+        }
+
+        .comment-body {
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .comment-body p {
+            margin-bottom: 12px;
+        }
+
+        .comment-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Comment Stats */
+        .comment-stats {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 8px 0;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: linear-gradient(135deg, rgba(232, 180, 77, 0.08) 0%, rgba(26, 95, 122, 0.05) 100%);
+            border: 1px solid #e8b44d30;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 28px 0;
+            text-align: center;
+        }
+
+        .action-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .action-text {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            color: #ffffff;
+            padding: 16px 48px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 61, 98, 0.3);
+        }
+
+        .cta-text {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 16px;
+        }
+
+        /* Post Engagement Section */
+        .engagement-section {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .engagement-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .engagement-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .engagement-item {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .engagement-label {
+            font-size: 11px;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .engagement-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        /* Response Suggestions */
+        .response-tips {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .response-tips-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .response-tips-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .response-tips ul {
+            margin-left: 20px;
+        }
+
+        .response-tips ul li {
+            color: #666666;
+            font-size: 13px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .response-tips strong {
+            color: #0a3d62;
+        }
+
+        /* Notification Preferences */
+        .notification-prefs {
+            background: #f5f7fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .notification-prefs-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .notification-prefs-text {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .notification-prefs-link {
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .notification-prefs-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 32px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-message {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .footer-contact strong {
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #0a3d62;
+            color: #ffffff;
+            border-color: #0a3d62;
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .copyright {
+            font-size: 11px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-content {
+                padding: 24px 20px;
+            }
+
+            .email-footer {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-icon {
+                font-size: 40px;
+            }
+
+            .commenter-section {
+                grid-template-columns: 50px 1fr;
+                gap: 12px;
+            }
+
+            .commenter-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .engagement-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comment-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 14px;
+            }
+
+            .post-title {
+                font-size: 16px;
+            }
+
+            .comment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .comment-time {
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <div class="header-icon">💬</div>
+        <div class="header-title">New Comment</div>
+        <div class="header-subtitle"> <span class="author-name" th:text="${authorName}"> </span> Commented on Your Post</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <p class="greeting-text">
+            Hello <span class="author-name" th:text="${authorName}">Author</span>,
+        </p>
+
+        <p style="font-size: 15px; color: #666666; margin-bottom: 16px;">
+            <span class="author-name" th:text="${commenterName}">John Doe</span> just left a comment on your blog post:
+        </p>
+
+        <!-- Post Info Card -->
+        <div class="post-info-card">
+            <div class="post-label">
+                <span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.1043 14.2745C15.5376 14.2745 15.8986 14.443 16.1874 14.78C16.4762 15.0687 16.6206 15.4297 16.6206 15.8629C16.6206 16.2962 16.4761 16.6572 16.1872 16.946C15.8985 17.2348 15.5376 17.3792 15.1043 17.3792H8.82281C8.38947 17.3792 8.02845 17.2347 7.73976 16.9458C7.45086 16.6571 7.30641 16.2962 7.30641 15.8629C7.30641 15.4297 7.45086 15.0687 7.73976 14.7799C8.02855 14.4429 8.38957 14.2745 8.82281 14.2745H15.1043ZM8.82281 9.65363C8.38947 9.65363 8.02845 9.50918 7.73976 9.22028C7.45086 8.93149 7.30641 8.57047 7.30641 8.13723C7.30641 7.70409 7.45086 7.34312 7.73976 7.05432C8.02855 6.76542 8.38957 6.62098 8.82281 6.62098H12.866C13.2993 6.62098 13.6604 6.76542 13.9491 7.05432C14.238 7.34312 14.3824 7.70409 14.3824 8.13723C14.3824 8.57057 14.238 8.93159 13.9491 9.22028C13.6603 9.50918 13.2992 9.65363 12.866 9.65363H8.82281ZM18.1367 9.65363V6.62098C18.1367 5.36939 17.6795 4.28634 16.765 3.3718C15.8504 2.45727 14.7673 2 13.5159 2H7.37864C6.12716 2 5.04415 2.45727 4.12961 3.3718C3.21508 4.28634 2.75781 5.36939 2.75781 6.62098V17.379C2.75781 18.6305 3.21508 19.7135 4.12961 20.628C5.04415 21.5427 6.12716 22 7.37864 22H16.6206C17.8721 22 18.9551 21.5427 19.8696 20.628C20.7842 19.7135 21.2416 18.6305 21.2416 17.379V12.7582C21.2416 12.3249 21.0971 11.9638 20.8082 11.675C20.5194 11.3862 20.1585 11.2418 19.7253 11.2418C19.2921 11.2418 18.907 11.0974 18.57 10.8086C18.2811 10.4717 18.1367 10.0869 18.1367 9.65363Z" fill="#323544"/>
+</svg>
+
+                </span>
+                Article</div>
+            <div class="post-title" th:text="${postTitle}">Economic Policies and Their Impact on Development</div>
+        </div>
+
+        <!-- Commenter Info Section -->
+        <div class="commenter-section">
+            <div class="commenter-avatar" th:text="${commenterName.charAt(0)}">J</div>
+            <div class="commenter-info">
+                <h3 th:text="${commenterName}">John Doe</h3>
+                <p th:text="${commenterEmail}">john.doe@example.com</p>
+            </div>
+        </div>
+
+        <!-- Comment Box -->
+        <div class="comment-box">
+            <div class="comment-header">
+                <div class="comment-author-info">
+                    <span class="comment-author-name" th:text="${commenterName}">John Doe</span>
+                    <span class="comment-badge">New Comment</span>
+                </div>
+                <div class="comment-time" th:text="${#dates.format(commentDate, 'MMM dd, yyyy HH:mm')}">Jan 15, 2024 14:30</div>
+            </div>
+            <div class="comment-body" th:text="${commentSnippet}">
+                This is a great post! I really enjoyed reading about the economic implications and your thoughtful analysis.
+                Your perspective on market dynamics is particularly insightful and well-supported by empirical evidence.
+            </div>
+            <div class="comment-stats">
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.89346 2.35248C3.49195 2.35248 2.35248 3.49359 2.35248 4.90532C2.35248 6.38164 3.20954 7.9168 4.37255 9.33522C5.39396 10.581 6.59464 11.6702 7.50002 12.4778C8.4054 11.6702 9.60608 10.581 10.6275 9.33522C11.7905 7.9168 12.6476 6.38164 12.6476 4.90532C12.6476 3.49359 11.5081 2.35248 10.1066 2.35248C9.27059 2.35248 8.81894 2.64323 8.5397 2.95843C8.27877 3.25295 8.14623 3.58566 8.02501 3.88993C8.00391 3.9429 7.98315 3.99501 7.96211 4.04591C7.88482 4.23294 7.7024 4.35494 7.50002 4.35494C7.29765 4.35494 7.11523 4.23295 7.03793 4.04592C7.01689 3.99501 6.99612 3.94289 6.97502 3.8899C6.8538 3.58564 6.72126 3.25294 6.46034 2.95843C6.18109 2.64323 5.72945 2.35248 4.89346 2.35248ZM1.35248 4.90532C1.35248 2.94498 2.936 1.35248 4.89346 1.35248C6.0084 1.35248 6.73504 1.76049 7.20884 2.2953C7.32062 2.42147 7.41686 2.55382 7.50002 2.68545C7.58318 2.55382 7.67941 2.42147 7.79119 2.2953C8.265 1.76049 8.99164 1.35248 10.1066 1.35248C12.064 1.35248 13.6476 2.94498 13.6476 4.90532C13.6476 6.74041 12.6013 8.50508 11.4008 9.96927C10.2636 11.3562 8.92194 12.5508 8.00601 13.3664C7.94645 13.4194 7.88869 13.4709 7.83291 13.5206C7.64324 13.6899 7.3568 13.6899 7.16713 13.5206C7.11135 13.4709 7.05359 13.4194 6.99403 13.3664C6.0781 12.5508 4.73641 11.3562 3.59926 9.96927C2.39872 8.50508 1.35248 6.74041 1.35248 4.90532Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                        Likes</div>
+                    <div class="stat-value" th:text="${commentLikes}"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.94721 0.164594C7.66569 0.0238299 7.33431 0.0238302 7.05279 0.164594L0.552786 3.41459C0.214002 3.58399 0 3.93025 0 4.30902V12C0 12.5523 0.447715 13 1 13H14C14.5523 13 15 12.5523 15 12V4.30902C15 3.93025 14.786 3.58399 14.4472 3.41459L7.94721 0.164594ZM13.5689 4.09349L7.5 1.05902L1.43105 4.09349L7.5 7.29136L13.5689 4.09349ZM1 4.88366V12H14V4.88366L7.70977 8.19813C7.57848 8.26731 7.42152 8.26731 7.29023 8.19813L1 4.88366Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                        Replies</div>
+                    <div class="stat-value" th:text="${commentReplies}"></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.97942 1.25171L6.9585 1.30199L5.58662 4.60039C5.54342 4.70426 5.44573 4.77523 5.3336 4.78422L1.7727 5.0697L1.71841 5.07405L1.38687 5.10063L1.08608 5.12475C0.820085 5.14607 0.712228 5.47802 0.914889 5.65162L1.14406 5.84793L1.39666 6.06431L1.43802 6.09974L4.15105 8.42374C4.23648 8.49692 4.2738 8.61176 4.24769 8.72118L3.41882 12.196L3.40618 12.249L3.32901 12.5725L3.25899 12.866C3.19708 13.1256 3.47945 13.3308 3.70718 13.1917L3.9647 13.0344L4.24854 12.861L4.29502 12.8326L7.34365 10.9705C7.43965 10.9119 7.5604 10.9119 7.6564 10.9705L10.705 12.8326L10.7515 12.861L11.0354 13.0344L11.2929 13.1917C11.5206 13.3308 11.803 13.1256 11.7411 12.866L11.671 12.5725L11.5939 12.249L11.5812 12.196L10.7524 8.72118C10.7263 8.61176 10.7636 8.49692 10.849 8.42374L13.562 6.09974L13.6034 6.06431L13.856 5.84793L14.0852 5.65162C14.2878 5.47802 14.18 5.14607 13.914 5.12475L13.6132 5.10063L13.2816 5.07405L13.2274 5.0697L9.66645 4.78422C9.55432 4.77523 9.45663 4.70426 9.41343 4.60039L8.04155 1.30199L8.02064 1.25171L7.89291 0.944609L7.77702 0.665992C7.67454 0.419604 7.32551 0.419604 7.22303 0.665992L7.10715 0.944609L6.97942 1.25171ZM7.50003 2.60397L6.50994 4.98442C6.32273 5.43453 5.89944 5.74207 5.41351 5.78103L2.84361 5.98705L4.8016 7.66428C5.17183 7.98142 5.33351 8.47903 5.2204 8.95321L4.62221 11.461L6.8224 10.1171C7.23842 9.86302 7.76164 9.86302 8.17766 10.1171L10.3778 11.461L9.77965 8.95321C9.66654 8.47903 9.82822 7.98142 10.1984 7.66428L12.1564 5.98705L9.58654 5.78103C9.10061 5.74207 8.67732 5.43453 8.49011 4.98442L7.50003 2.60397Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                        Rating</div>
+                    <div class="stat-value" th:text="${commentRating}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Section -->
+        <div class="action-section">
+            <div class="action-title">
+                <svg style="display: inline-block; width: 18px; height: 18px; margin-right: 8px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6m0 0v6"></path>
+                </svg>
+                Engage With Your Audience
+            </div>
+            <p class="action-text">
+                This comment helps build community around your content. Consider responding to keep the conversation going!
+            </p>
+        </div>
+
+        <!-- Post Engagement Stats -->
+        <div class="engagement-section">
+            <div class="engagement-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 17"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                Post Engagement
+            </div>
+            <div class="engagement-grid">
+                <div class="engagement-item">
+                    <div class="engagement-label">Total Comments</div>
+                    <div class="engagement-count" th:text="${totalComments}">12</div>
+                </div>
+                <div class="engagement-item">
+                    <div class="engagement-label">Total Views</div>
+                    <div class="engagement-count" th:text="${totalViews}">342</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Tips -->
+        <div class="response-tips">
+            <div class="response-tips-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Tips for Responding
+            </div>
+            <ul>
+                <li><strong>Thank them</strong> for their thoughtful engagement with your content</li>
+                <li><strong>Address key points</strong> they raised in their comment</li>
+                <li><strong>Add value</strong> with additional insights or resources</li>
+                <li><strong>Ask follow-up questions</strong> to deepen the discussion</li>
+                <li><strong>Be professional</strong> and maintain academic tone</li>
+            </ul>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a th:href="${postUrl}" class="cta-button">
+                <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                View & Reply to Comment
+            </a>
+            <p class="cta-text">Open your blog post to see the comment and craft your response</p>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div class="notification-prefs">
+            <div class="notification-prefs-title">📧 Notification Preferences</div>
+            <p class="notification-prefs-text">
+                You're receiving this because comments are enabled on your posts.
+                <a th:href="${notificationPreferencesUrl}" class="notification-prefs-link">Manage your notification settings</a>
+                to control which types of interactions you're notified about.
+            </p>
+        </div>
+
+        <!-- Additional Context -->
+        <div style="background: #f5f7fa; padding: 20px; border-radius: 8px; margin: 24px 0; border: 1px solid #e0e0e0;">
+            <div style="font-weight: 700; color: #0a3d62; font-size: 14px; margin-bottom: 12px;">
+                 Building Your Blog Community
+            </div>
+            <p style="font-size: 13px; color: #666666; line-height: 1.6; margin: 0;">
+                Every comment represents an engaged reader interested in your work. Responding promptly and thoughtfully strengthens your academic community and encourages more meaningful discussions around your research and insights.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <div class="footer-message">
+            <strong>Your readers value your voice.</strong><br>
+            Keep the conversation alive by responding to comments and building your academic community.
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-contact">
+            <strong>Kandahar University<br>Faculty of Economics</strong>
+            Email: <strong>blog@kandahar-university.edu</strong><br>
+            Phone: <strong>+93 (0) XXX-XXX-XXXX</strong><br>
+            Website: <strong>www.kandahar-university.edu</strong>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="Facebook">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Twitter">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </a>
+        </div>
+
+        <div class="copyright">
+            © 2024 Kandahar University - Faculty of Economics. All rights reserved.
+        </div>
+    </div>
+</div>
+</body>
+</html>

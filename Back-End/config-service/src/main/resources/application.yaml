@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: config-service
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_SERVICE_FILE}
+#  rabbitmq:
+#    password: ${RABBIT_PASSWORD}
+#    username: ${RABBIT_USERNAME}
+#    host: ${RABBIT_HOST}
+#    port: ${RABBIT_PORT}
+  rabbitmq:
+    password: guest
+    username: guest
+    host: localhost
+    port: 5672
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+server:
+  port: 8888

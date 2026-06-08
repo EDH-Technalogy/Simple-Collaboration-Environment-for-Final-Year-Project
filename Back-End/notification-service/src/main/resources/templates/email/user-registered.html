@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Kandahar University - Economy Faculty</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.08);
+        }
+
+        /* Header Section */
+        .email-header {
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(232, 180, 77, 0.08);
+            border-radius: 50%;
+        }
+
+        .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: rgba(232, 180, 77, 0.06);
+            border-radius: 50%;
+        }
+
+        .university-header {
+            position: relative;
+            z-index: 1;
+        }
+
+        .university-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #e8b44d;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .faculty-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            background-color: #e8b44d;
+            color: #0a3d62;
+            padding: 8px 24px;
+            border-radius: 24px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* Content Section */
+        .email-content {
+            padding: 40px 30px;
+        }
+
+        .greeting-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .greeting-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: #0a3d62;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(26, 95, 122, 0.05) 0%, rgba(232, 180, 77, 0.08) 100%);
+            border-left: 4px solid #e8b44d;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-text {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.7;
+        }
+
+        /* Icon Styles */
+        .icon-small {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .info-card {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .info-card-label {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #0a3d62;
+            font-weight: 700;
+        }
+
+        /* Features Section */
+        .features-section {
+            margin: 32px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a3d62;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8b44d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feature-icon-container {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon-container svg {
+            width: 22px;
+            height: 22px;
+            color: #e8b44d;
+            stroke: #e8b44d;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            color: #0a3d62;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .feature-description {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a3d62 0%, #1a5f7a 100%);
+            color: #ffffff;
+            padding: 16px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 61, 98, 0.3);
+        }
+
+        .cta-text {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 16px;
+        }
+
+        /* Verification Code */
+        .verification-code {
+            background: #f5f7fa;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #0a3d62;
+            font-size: 34px;
+            letter-spacing: 10px;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        /* Next Steps */
+        .next-steps {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .next-steps ol {
+            margin-left: 20px;
+            color: #666666;
+        }
+
+        .next-steps ol li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .next-steps strong {
+            color: #0a3d62;
+        }
+
+        /* Footer Section */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 32px 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-message {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .footer-contact strong {
+            color: #0a3d62;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .social-link:hover {
+            background-color: #0a3d62;
+            color: #ffffff;
+            border-color: #0a3d62;
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .copyright {
+            font-size: 11px;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-content {
+                padding: 24px 20px;
+            }
+
+            .email-footer {
+                padding: 24px 20px;
+            }
+
+            .greeting-title {
+                font-size: 24px;
+            }
+
+            .university-name {
+                font-size: 28px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .feature-item {
+                padding: 12px;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <div class="university-header">
+            <div class="university-name">🎓 Kandahar University</div>
+            <div class="faculty-name">Faculty of Economics</div>
+        </div>
+        <div class="welcome-badge">Welcome to Our Platform</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <div class="greeting-title">Welcome, <span th:text="${firstName}" class="student-name">Friend</span>!</div>
+
+        <p class="greeting-text">
+            Thank you for registering with us! We're thrilled to have you join the Faculty of Economics at Kandahar University. Your account has been successfully created, and you're all set to begin your educational journey.
+        </p>
+
+        <div class="highlight-box">
+            <div class="highlight-title">
+                <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                    <path d="M12 6v6l4 2"></path>
+                </svg>
+                Verify Your Email
+            </div>
+            <div class="highlight-text">
+                Enter the one-time password below in the signup screen. This code is short lived and protects the account before first login.
+            </div>
+        </div>
+
+        <!-- Student Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-label">Student Email</div>
+                <div class="info-card-value" th:text="${studentEmail}">your.email@university.edu</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Registration Status</div>
+                <div class="info-card-value" style="color: #e8b44d;">OTP Required</div>
+            </div>
+        </div>
+
+        <!-- Verification CTA -->
+        <div class="cta-section">
+            <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+                Use this 6-digit code to verify your email address:
+            </p>
+            <div class="verification-code" th:text="${verificationCode}">123456</div>
+            <a th:href="${verificationUrl}" class="cta-button">Open Verification Page</a>
+            <p class="cta-text">The code expires in 15 minutes.</p>
+        </div>
+
+        <p style="font-size: 13px; color: #999; margin-top: 20px;">
+            <strong>Note:</strong> Never share this code. If you didn't create this account, please ignore this email or contact support.
+        </p>
+
+        <!-- What You Can Do -->
+        <div class="features-section">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26H22L17.55 12.5L19.64 18.74L12 14.49L4.36 18.74L6.45 12.5L2 8.26H8.91L12 2Z"></path>
+                </svg>
+                What's Next?
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Browse Courses</div>
+                        <div class="feature-description">Explore available courses and enroll in classes</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Connect with Peers</div>
+                        <div class="feature-description">Join study groups and connect with classmates</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M4.22 4.22l4.24 4.24m6.08 0l4.24-4.24"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                            <path d="M4.22 19.78l4.24-4.24m6.08 0l4.24 4.24"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">View Schedule</div>
+                        <div class="feature-description">Check your class times and academic calendar</div>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <div class="feature-title">Get Support</div>
+                        <div class="feature-description">Contact advisors and get help anytime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps List -->
+        <div class="next-steps">
+            <strong style="color: #0a3d62; display: block; margin-bottom: 12px;">📋 Complete These Steps:</strong>
+            <ol>
+                <li><strong>Verify</strong> your email address with the OTP code above</li>
+                <li><strong>Complete</strong> your student profile with personal information</li>
+                <li><strong>Select</strong> your courses and preferred schedule</li>
+                <li><strong>Attend</strong> orientation session (details in your portal)</li>
+                <li><strong>Connect</strong> with your academic advisor</li>
+            </ol>
+        </div>
+
+        <p class="greeting-text" style="margin-top: 24px;">
+            If you have any questions or need assistance, our support team is always ready to help. Don't hesitate to reach out!
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <div class="footer-message">
+            <strong>We're excited to have you on board!</strong><br>
+            Your success is our priority. Welcome to the Kandahar University community.
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-contact">
+            <strong>Kandahar University<br>Faculty of Economics</strong>
+            Email: <strong>economics@kandahar-university.edu</strong><br>
+            Phone: <strong>+93 (0) XXX-XXX-XXXX</strong><br>
+            Website: <strong>www.kandahar-university.edu</strong>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="Facebook">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="Twitter">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7"></path>
+                </svg>
+            </a>
+            <a href="#" class="social-link" title="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </a>
+        </div>
+
+        <div class="copyright">
+            © 2024 Kandahar University - Faculty of Economics. All rights reserved.
+        </div>
+    </div>
+</div>
+</body>
+</html>

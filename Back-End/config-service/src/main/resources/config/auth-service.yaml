@@ -1,0 +1,166 @@
+spring:
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+  rabbitmq:
+    password: ${RABBIT_PASSWORD}
+    username: ${RABBIT_USERNAME}
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+    # Security - OAuth2 Resource Server
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8444/realms/final-project
+          jwk-set-uri: http://localhost:8444/realms/final-project/protocol/openid-connect/certs
+    # CORS Configuration
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080}
+    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+    allowed-headers: '*'
+    expose-headers: Authorization,Content-Type
+    max-age: 3600
+
+    # Jackson Configuration
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+    # MVC Configuration
+  mvc:
+    static-path-pattern: /static/**
+
+    # Task Scheduling
+  task:
+    scheduling:
+      pool:
+        size: 5
+      thread-name-prefix: user-service-scheduler-
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 100
+      thread-name-prefix: user-service-executor-
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  # Server Configuration
+server:
+  port: 8085
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    min-response-size: 1024
+  http2:
+    enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+
+  # Keycloak Configuration
+keycloak:
+  allow-any-hostname: true
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8444}
+  realm: ${KEYCLOAK_REALM}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  admin-username: ${KEYCLOAK_ADMIN_USER}
+  admin-password: ${KEYCLOAK_ADMIN_PASSWORD}
+  application_realm: ${APPLICATION_REALM}
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.microservices.user: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/user-service.log
+    max-size: 10MB
+    max-history: 10
+
+  # Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+    shutdown:
+      enabled: false
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+    use-root-path: true
+  show-actuator: true
+app:
+  name: User Microservice
+  version: 1.0.0
+  description: Comprehensive user management service with authentication and authorization
+  security:
+    jwt:
+      secret: ${JWT_SECRET:your-secret-key-change-in-production-minimum-256-bits-recommended}
+      expiration: 3600000
+      refresh-expiration: 604800000
+  audit:
+    enabled: true
+    async: true
+  features:
+    two-factor-auth: true
+    email-verification: true
+    account-locking: true
+  default-role: USER
+
+# Google OAuth2 Configuration
+google:
+  client-id: ${GOOGLE_CLIENT_ID:your-google-client-id.apps.googleusercontent.com}
+  client-secret: ${GOOGLE_CLIENT_SECRET:}

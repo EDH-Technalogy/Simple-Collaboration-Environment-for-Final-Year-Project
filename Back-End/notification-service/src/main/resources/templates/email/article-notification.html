@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${emailTitle}">Article Notification</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 24px auto;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(10, 61, 98, 0.10);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a3d62, #1a5f7a);
+            padding: 36px 28px;
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: rgba(232, 180, 77, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #e8b44d;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #e8b44d;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 32px 28px;
+        }
+
+        .greeting {
+            font-size: 15px;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .strong {
+            color: #0a3d62;
+            font-weight: 700;
+        }
+
+        .card {
+            border: 1px solid #e4e8ee;
+            border-left: 5px solid #e8b44d;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 22px 0;
+            background: #f9fbfd;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666666;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 18px;
+            color: #0a3d62;
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .actor-box {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e4e8ee;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 22px 0;
+        }
+
+        .avatar {
+            min-width: 46px;
+            width: 46px;
+            height: 46px;
+            background: #0a3d62;
+            color: #e8b44d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .actor-name {
+            color: #0a3d62;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .actor-email {
+            color: #666666;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .message-box {
+            background: #ffffff;
+            border: 1px solid #e4e8ee;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 22px 0;
+        }
+
+        .message-title {
+            color: #0a3d62;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .message-text {
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 22px 0;
+        }
+
+        .detail-item {
+            background: #f5f7fa;
+            border: 1px solid #e4e8ee;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .detail-label {
+            color: #777777;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            color: #0a3d62;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 30px 0 18px;
+        }
+
+        .cta a {
+            background: #0a3d62;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 34px;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #666666;
+            background: rgba(232, 180, 77, 0.10);
+            border: 1px solid rgba(232, 180, 77, 0.35);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 22px;
+        }
+
+        .footer {
+            background: #f5f7fa;
+            border-top: 1px solid #e4e8ee;
+            padding: 24px 28px;
+            text-align: center;
+            color: #666666;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer strong {
+            color: #0a3d62;
+        }
+
+        .social {
+            margin-top: 14px;
+        }
+
+        .social a {
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 6px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .actor-box {
+                align-items: flex-start;
+            }
+
+            .cta a {
+                display: block;
+                padding: 14px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-icon">
+            <svg th:if="${eventType == 'COMMENT_CREATED'}" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+            </svg>
+
+            <svg th:if="${eventType == 'COMMENT_REPLIED'}" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M9 17l-5-5 5-5"/>
+                <path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
+            </svg>
+
+            <svg th:if="${eventType == 'ARTICLE_LIKED'}" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+            </svg>
+
+            <svg th:if="${eventType == 'ARTICLE_SHARED'}" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <path d="M8.6 13.5l6.8 4"/>
+                <path d="M15.4 6.5l-6.8 4"/>
+            </svg>
+
+            <svg th:if="${eventType == 'ARTICLE_PUBLISHED'}" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M20 6L9 17l-5-5"/>
+            </svg>
+        </div>
+
+        <h1 th:text="${headerTitle}">Article Update</h1>
+        <p th:text="${headerSubtitle}">There is a new activity on your article.</p>
+    </div>
+
+    <div class="content">
+        <p class="greeting">
+            Hello <span class="strong" th:text="${recipientName}">User</span>,
+        </p>
+
+        <p class="greeting" th:text="${mainMessage}">
+            There is a new update related to your article.
+        </p>
+
+        <div class="card">
+            <div class="label">Article</div>
+            <p class="title" th:text="${postTitle}">Article title</p>
+        </div>
+
+        <div class="actor-box" th:if="${actorName != null}">
+            <div class="avatar" th:text="${actorName.substring(0,1).toUpperCase()}">A</div>
+            <div>
+                <div class="actor-name" th:text="${actorName}">Actor Name</div>
+                <div class="actor-email" th:text="${actorEmail}">actor@example.com</div>
+            </div>
+        </div>
+
+        <div class="message-box" th:if="${commentSnippet != null}">
+            <div class="message-title" th:text="${messageBoxTitle}">Message</div>
+            <div class="message-text" th:text="${commentSnippet}">
+                Comment or reply content.
+            </div>
+        </div>
+
+        <div class="details">
+            <div class="detail-item" th:if="${sharePlatform != null}">
+                <div class="detail-label">Shared on</div>
+                <div class="detail-value" th:text="${sharePlatform}">LinkedIn</div>
+            </div>
+
+            <div class="detail-item" th:if="${adminName != null}">
+                <div class="detail-label">Approved by</div>
+                <div class="detail-value" th:text="${adminName}">Admin</div>
+            </div>
+
+            <div class="detail-item" th:if="${occurredAt != null}">
+                <div class="detail-label">Date</div>
+                <div class="detail-value" th:text="${occurredAt}">Today</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Faculty</div>
+                <div class="detail-value">Economics</div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <a th:href="${postUrl}">Open Article</a>
+        </div>
+
+        <div class="note">
+            You are receiving this notification because this article is connected to your account.
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>Kandahar University — Faculty of Economics</strong><br>
+        Kandahar, Afghanistan<br>
+        Email: economics@kandahar-university.edu<br>
+
+        <div class="social">
+            <a href="#">Facebook</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Website</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

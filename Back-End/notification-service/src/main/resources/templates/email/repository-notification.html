@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${emailTitle}">Repository Notification</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 24px auto;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(10, 61, 98, 0.10);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a3d62, #1a5f7a);
+            padding: 36px 28px;
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: rgba(232, 180, 77, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-icon svg {
+            width: 30px;
+            height: 30px;
+            stroke: #e8b44d;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #e8b44d;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 32px 28px;
+        }
+
+        .text {
+            font-size: 15px;
+            color: #666666;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .strong {
+            color: #0a3d62;
+            font-weight: 700;
+        }
+
+        .repo-card {
+            border: 1px solid #e4e8ee;
+            border-left: 5px solid #e8b44d;
+            border-radius: 12px;
+            padding: 20px;
+            background: #f9fbfd;
+            margin: 22px 0;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666666;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .repo-name {
+            color: #0a3d62;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .actor-box {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e4e8ee;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 22px 0;
+        }
+
+        .avatar {
+            min-width: 46px;
+            width: 46px;
+            height: 46px;
+            background: #0a3d62;
+            color: #e8b44d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .actor-name {
+            color: #0a3d62;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .actor-email {
+            color: #666666;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 22px 0;
+        }
+
+        .detail-item {
+            background: #f5f7fa;
+            border: 1px solid #e4e8ee;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .detail-label {
+            color: #777777;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            color: #0a3d62;
+            font-size: 14px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .commit-box {
+            background: #ffffff;
+            border: 1px solid #e4e8ee;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 22px 0;
+        }
+
+        .commit-title {
+            color: #0a3d62;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .commit-message {
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 30px 0 18px;
+        }
+
+        .cta a {
+            background: #0a3d62;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 34px;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #666666;
+            background: rgba(232, 180, 77, 0.10);
+            border: 1px solid rgba(232, 180, 77, 0.35);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 22px;
+        }
+
+        .footer {
+            background: #f5f7fa;
+            border-top: 1px solid #e4e8ee;
+            padding: 24px 28px;
+            text-align: center;
+            color: #666666;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer strong {
+            color: #0a3d62;
+        }
+
+        .social {
+            margin-top: 14px;
+        }
+
+        .social a {
+            color: #0a3d62;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 6px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .actor-box {
+                align-items: flex-start;
+            }
+
+            .cta a {
+                display: block;
+                padding: 14px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-icon">
+            <svg th:if="${eventType == 'REPOSITORY_PUSHED' || eventType == 'COMMIT_CREATED'}"
+                 viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M12 19V5"/>
+                <path d="M5 12l7-7 7 7"/>
+            </svg>
+
+            <svg th:if="${eventType == 'REPOSITORY_INVITATION_SENT'}"
+                 viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M19 8v6"/>
+                <path d="M22 11h-6"/>
+            </svg>
+
+            <svg th:if="${eventType == 'BRANCH_CREATED' || eventType == 'BRANCH_MERGED'}"
+                 viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="6" cy="6" r="3"/>
+                <circle cx="18" cy="18" r="3"/>
+                <path d="M6 9v3a6 6 0 0 0 6 6h3"/>
+                <path d="M6 9v9"/>
+            </svg>
+
+            <svg th:if="${eventType == 'PULL_REQUEST_OPENED' || eventType == 'PULL_REQUEST_MERGED'}"
+                 viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="6" r="3"/>
+                <path d="M6 15V6"/>
+                <path d="M18 9v1a5 5 0 0 1-5 5H9"/>
+            </svg>
+        </div>
+
+        <h1 th:text="${headerTitle}">Repository Update</h1>
+        <p th:text="${headerSubtitle}">There is a new repository activity.</p>
+    </div>
+
+    <div class="content">
+        <p class="text">
+            Hello <span class="strong" th:text="${recipientName}">User</span>,
+        </p>
+
+        <p class="text" th:text="${mainMessage}">
+            A repository activity happened.
+        </p>
+
+        <div class="repo-card">
+            <div class="label">Repository</div>
+            <p class="repo-name" th:text="${repositoryName}">repository-name</p>
+        </div>
+
+        <div class="actor-box" th:if="${actorName != null}">
+            <div class="avatar" th:text="${actorName.substring(0,1).toUpperCase()}">A</div>
+            <div>
+                <div class="actor-name" th:text="${actorName}">Actor Name</div>
+                <div class="actor-email" th:text="${actorEmail}">actor@example.com</div>
+            </div>
+        </div>
+
+        <div class="details">
+            <div class="detail-item" th:if="${branchName != null}">
+                <div class="detail-label">Branch</div>
+                <div class="detail-value" th:text="${branchName}">main</div>
+            </div>
+
+            <div class="detail-item" th:if="${sourceBranch != null}">
+                <div class="detail-label">Source Branch</div>
+                <div class="detail-value" th:text="${sourceBranch}">feature/login</div>
+            </div>
+
+            <div class="detail-item" th:if="${targetBranch != null}">
+                <div class="detail-label">Target Branch</div>
+                <div class="detail-value" th:text="${targetBranch}">main</div>
+            </div>
+
+            <div class="detail-item" th:if="${commitCount != null}">
+                <div class="detail-label">Commits</div>
+                <div class="detail-value" th:text="${commitCount}">3</div>
+            </div>
+
+            <div class="detail-item" th:if="${pullRequestTitle != null}">
+                <div class="detail-label">Pull Request</div>
+                <div class="detail-value" th:text="${pullRequestTitle}">PR title</div>
+            </div>
+
+            <div class="detail-item" th:if="${occurredAt != null}">
+                <div class="detail-label">Date</div>
+                <div class="detail-value" th:text="${occurredAt}">Today</div>
+            </div>
+        </div>
+
+        <div class="commit-box" th:if="${commitMessage != null}">
+            <div class="commit-title">Commit Message</div>
+            <div class="commit-message" th:text="${commitMessage}">
+                Commit message here.
+            </div>
+        </div>
+
+        <div class="cta">
+            <a th:href="${repositoryUrl}">Open Repository</a>
+        </div>
+
+        <div class="note">
+            You are receiving this notification because you are a member of this repository.
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>Kandahar University — Faculty of Economics</strong><br>
+        Kandahar, Afghanistan<br>
+        Email: economics@kandahar-university.edu<br>
+
+        <div class="social">
+            <a href="#">Facebook</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Website</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

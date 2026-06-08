@@ -1,0 +1,74 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/blog_db
+      auto-index-creation: true
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2000
+      jedis:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+  rabbitmq:
+    password: ${RABBIT_PASSWORD}
+    username: ${RABBIT_USERNAME}
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_SERVER_URL}/realms/${KEYCLOAK_REALM}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+server:
+  port: 8087
+  error:
+    include-message: always
+    include-stacktrace: on_param
+    include-exception: false
+    include-binding-errors: always
+logging:
+  level:
+    root: info
+    com:
+      final_project:
+        blog_service:
+          model:
+            Article: DEBUG
+    org:
+      springframework:
+        web: INFO
+        data:
+          mongodb: DEBUG
+app:
+  file-upload:
+    max-image-size: 10485760
+    max-video-size: 536870912
+  service:
+    auth-url: http://auth-service
+    file-url: http://file-service

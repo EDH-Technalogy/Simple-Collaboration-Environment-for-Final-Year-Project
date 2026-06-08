@@ -1,2 +1,22 @@
+# vic-desktop-application (Go + Wails)
+
+# Go binaries and build
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# vendor
+vendor/
+
+# Wails / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# IDE
+.vscode/
+.idea/
 ./.idea
 ./desktop/frontend/node_modules

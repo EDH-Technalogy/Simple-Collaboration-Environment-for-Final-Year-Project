@@ -1,3 +1,23 @@
+# Front-End specific ignores
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+
+# Environment
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor
+.vscode/
 # Logs
 logs
 *.log

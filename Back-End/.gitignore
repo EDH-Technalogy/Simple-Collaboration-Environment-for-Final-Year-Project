@@ -1,3 +1,25 @@
+# Back-End (Java / Maven) ignores
+target/
+*.class
+*.log
+*.tmp
+.mvn/
+.settings/
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+out/
+
+# Logs and temp
+logs/
+*.log
+*.swp
 # =========================
 # Java / Spring Boot
 # =========================
